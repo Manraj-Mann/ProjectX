@@ -1,4 +1,4 @@
-#include "../ConfigReader.h"
+#include "../configReader.h"
 #include <iostream>
 
 int main()
@@ -26,8 +26,10 @@ int main()
     }
 
 
-    // std::cout<<"Value : "<<reader2.getKey<std::string>("name" , "name")<<std::endl;
-    std::cout<<"Value : "<<reader2.getKey<int>("name" , "kill")<<std::endl;
+    std::cout<<"Value : "<<reader2.getKey<std::string>("name" , "name")<<std::endl;
+    std::cout<<"Value : "<<reader2.getKey<bool>("name" , "kill")<<std::endl;
+    std::cout<<"Value : "<<reader3.getKey<int>("Block-1" , "key")<<std::endl;
+
 
     return 0;
 }

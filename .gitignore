@@ -1,0 +1,17 @@
+# Ignore the build directory
+build/
+
+# Ignore all executable files
+*.exe
+
+# Ignore all shared library files (e.g., .so, .dylib)
+*.so
+*.dylib
+
+# Ignore assembly files (e.g., .s)
+*.a
+
+# Ignore vscode cache
+
+*.vscode
+

@@ -1,7 +1,8 @@
-#include "ConfigReader.h"
+#include "configReader.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 // Error messages
 const char* getErrorMessage(ConfigErrorCode code)
@@ -177,6 +178,13 @@ T ConfigReader::getKey(const std::string &block, const std::string &key) const
             throw std::runtime_error("Conversion to double failed");
         }
     }
+    else if constexpr (std::is_same_v<T, std::string>)
+    {
+        if (!(iss >> result))
+        {
+            throw std::runtime_error("Conversion to string failed");
+        }
+    }
     else if constexpr (std::is_same_v<T, bool>)
     {
         std::string lowerValue = value;
@@ -208,4 +216,4 @@ template int ConfigReader::getKey<int>(const std::string &, const std::string &)
 template float ConfigReader::getKey<float>(const std::string &, const std::string &) const;
 template double ConfigReader::getKey<double>(const std::string &, const std::string &) const;
 template bool ConfigReader::getKey<bool>(const std::string &, const std::string &) const;
-template bool ConfigReader::getKey<std::string>(const std::string &, const std::string &) const;
+template std::string ConfigReader::getKey<std::string>(const std::string &, const std::string &) const;
