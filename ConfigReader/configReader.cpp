@@ -19,6 +19,10 @@ const char* getErrorMessage(ConfigErrorCode code)
             return "Error reading configuration file";
         case ConfigErrorCode::PARSE_ERROR:
             return "Error parsing configuration file";
+        case ConfigErrorCode::KEY_NOT_FOUND:
+            return "Key not found in block";
+        case ConfigErrorCode::BLOCK_NOT_FOUND:
+            return "Block not found";
         default:
             return "Unknown error";
     }
@@ -46,9 +50,8 @@ void ConfigReader::logError(ConfigErrorCode code, const std::string &message)
 
 bool ConfigReader::parseAndLoadFile()
 {
-    if (!fileName.size())
+    if (fileName.empty())
     {
-        std::cout<<"Return\n";
         lastError = ConfigErrorCode::FILE_EMPTY;
         return false;
     }
@@ -136,26 +139,28 @@ ConfigErrorCode ConfigReader::getLastError() const
 }
 
 template <typename T>
-T ConfigReader::getKey(const std::string &block, const std::string &key) const
+T ConfigReader::getKey(const std::string &block, const std::string &key) 
 {
+    T result{};
     // Check if the block and key exist
     auto blockIt = configData.find(block);
     if (blockIt == configData.end())
     {
-        throw std::runtime_error("Block not found");
+        lastError = ConfigErrorCode::BLOCK_NOT_FOUND;
+        return result;
     }
     
     auto keyIt = blockIt->second.find(key);
     if (keyIt == blockIt->second.end())
     {
-        throw std::runtime_error("Key not found");
+        lastError = ConfigErrorCode::KEY_NOT_FOUND;
+        return result;
     }
 
     std::string value = keyIt->second;
 
     // Perform the conversion based on the type
     std::istringstream iss(value);
-    T result;
 
     if constexpr (std::is_same_v<T, int>)
     {
@@ -211,9 +216,14 @@ T ConfigReader::getKey(const std::string &block, const std::string &key) const
     return result;
 }
 
+void ConfigReader::setFileName(const std::string &fileName)
+{
+    this->fileName = fileName;
+}
+
 // Explicit instantiation
-template int ConfigReader::getKey<int>(const std::string &, const std::string &) const;
-template float ConfigReader::getKey<float>(const std::string &, const std::string &) const;
-template double ConfigReader::getKey<double>(const std::string &, const std::string &) const;
-template bool ConfigReader::getKey<bool>(const std::string &, const std::string &) const;
-template std::string ConfigReader::getKey<std::string>(const std::string &, const std::string &) const;
+template int ConfigReader::getKey<int>(const std::string &, const std::string &) ;
+template float ConfigReader::getKey<float>(const std::string &, const std::string &) ;
+template double ConfigReader::getKey<double>(const std::string &, const std::string &) ;
+template bool ConfigReader::getKey<bool>(const std::string &, const std::string &) ;
+template std::string ConfigReader::getKey<std::string>(const std::string &, const std::string &) ;
