@@ -36,17 +36,22 @@ int main()
 
     // Runtime assertions to check specific key values
     try {
-        reader2.getKey<bool>("Block-1", "main");
+        reader2.getKey<bool>("General", "main");
         assert(reader2.getLastError() == ConfigErrorCode::KEY_NOT_FOUND);
 
         reader2.getKey<bool>("Block-6", "main2");
         assert(reader2.getLastError() == ConfigErrorCode::BLOCK_NOT_FOUND);
         
-        assert(reader2.getKey<int>("Block-1", "key") == 0);
+        assert(reader2.getKey<std::string>("General" , "version") == "1.0.0");
+        assert(reader2.getKey<double>("General" , "timeout") == 30.5);
+        assert(reader2.getKey<float>("General" , "timeout") == 30.5);
 
-        assert(reader2.getKey<std::string>("name", "name") == "manraj");
-        assert(reader2.getKey<bool>("name", "kill") == true);
-        
+        assert(reader2.getKey<bool>("Server" , "useSSL") == true);
+
+        assert(reader2.getKey<int>("Logging" , "maxFileSize") == 10485760);
+
+        std::cout<<"FI : "<<reader2.getKey<int>("Logging" , "maxFileSize")<<std::endl;
+
         std::cout << "All key values are as expected.\n";
 
     } catch (const std::out_of_range& e) {
