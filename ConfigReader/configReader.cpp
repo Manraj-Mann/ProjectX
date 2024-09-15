@@ -5,7 +5,7 @@
 #include <algorithm>
 
 // Error messages
-const char* getErrorMessage(ConfigErrorCode code)
+constexpr std::string_view getErrorMessage(ConfigErrorCode code)
 {
     switch (code)
     {

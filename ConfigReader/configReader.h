@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <string_view>
 
 /**
  * @enum ConfigErrorCode
@@ -24,7 +25,7 @@ enum class ConfigErrorCode
  * @param code The error code to convert to a string.
  * @return A C-style string representing the error message.
  */
-const char* getErrorMessage(ConfigErrorCode code);
+constexpr std::string_view getErrorMessage(ConfigErrorCode code);
 
 /**
  * @class ConfigReader
